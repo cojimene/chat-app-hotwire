@@ -21,13 +21,7 @@ class RoomsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream do
-        if @room.persisted?
-          render(
-            turbo_stream: turbo_stream.append(
-              'rooms', partial: 'shared/room', locals: {room: @room}
-            )
-          )
-        else
+        if @room.errors.any?
           render(
             turbo_stream: turbo_stream.replace(
               'room_form', partial: 'form', locals: {room: @room}
@@ -40,15 +34,7 @@ class RoomsController < ApplicationController
 
   def update
     respond_to do |format|
-      if @room.update(room_params)
-        format.turbo_stream do
-          render(
-            turbo_stream: turbo_stream.replace(
-              "room_#{@room.id}", partial: 'shared/room', locals: {room: @room}
-            )
-          )
-        end
-      else
+      unless @room.update(room_params)
         format.html { render :edit }
       end
     end
