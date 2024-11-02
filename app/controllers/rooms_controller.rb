@@ -34,7 +34,9 @@ class RoomsController < ApplicationController
 
   def update
     respond_to do |format|
-      unless @room.update(room_params)
+      if @room.update(room_params)
+        format.turbo_stream
+      else
         format.html { render :edit }
       end
     end
@@ -64,6 +66,7 @@ class RoomsController < ApplicationController
   end
 
   private
+
     def set_room
       @room = Room.find(params[:id])
     end

@@ -1,8 +1,6 @@
 <%= form_with model: room, class: "flex flex-col my-3 w-full" do |form| %>
   <% if room.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
-      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
-
       <ul>
         <% room.errors.each do |error| %>
           <li><%= error.full_message %></li>
