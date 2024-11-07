@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
   resources :rooms do
-    resources :messages, only: %i[edit create destroy update], shallow: true
+    post :add_user, on: :member
+
+    resources :messages, shallow: true do
+      get :actions, on: :member
+    end
   end
 
   devise_for :users
-  post 'add/user', to: 'rooms#add_user'
 
   # Defines the root path route ("/")
   root "rooms#index"

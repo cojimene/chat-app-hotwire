@@ -1,25 +1,24 @@
-<%= turbo_frame_tag 'rooms_controller' do %>
-  <%= turbo_stream_from 'room_messages_channel' %>
+<%= turbo_frame_tag 'room_details', class: 'w-full' do %>
+  <section class="flex flex-col gap-5 h-screen px-5" id="<%= dom_id(@room, :detail) %>">
+    <section class="flex flex-col gap-2 mt-10 items-center justify-center">
+      <div class="flex flex-col">
+        <h3 class="font-bold text-3xl text-white"><%= @room.name %> - Room</h3>
+      </div>
 
-  <main class="flex w-full h-screen bg-[#181D31]">
-    <%= render 'shared/side_bar' %>
+      <%= render 'users', room: @room %>
+    </section>
 
-    <section class="w-5/6 flex flex-col gap-5 h-screen px-5">
-      <%= render 'room', room: @room %>
-
-      <div class="flex flex-col items-center">
-        <div class="flex flex-col w-5/6">
-          <div class="h-72 w-full bg-white rounded p-2 my-5 overflow-y-auto" id="room_messages_div">
-            <% @room.messages.order(:created_at).each do |message| %>
-              <%= render 'messages/message', message: message %>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="flex flex-col w-5/6">
-          <%= render 'messages/form', room: @room, message: Message.new %>
+    <div class="flex flex-col items-center">
+      <div class="flex flex-col w-5/6">
+        <div class="h-72 w-full bg-white rounded p-2 my-5 overflow-y-auto" id="messages">
+          <%= turbo_stream_from @room, :messages %>
+          <%= render @room.messages.order(:created_at) %>
         </div>
       </div>
-    </section>
-  </main>
+
+      <%= turbo_frame_tag 'new_room', class:'flex flex-col w-5/6' do %>
+        <%= render 'messages/form', room: @room, message: Message.new %>
+      <% end %>
+    </div>
+  </section>
 <% end %>

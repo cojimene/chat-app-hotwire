@@ -1,33 +1,29 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy ]
+  before_action :set_room, only: %i[show edit update destroy add_user]
 
   def index
-    @rooms = Room.all
+    @rooms = current_user.rooms
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @room = Room.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @room = current_user.rooms.create(room_params)
 
     respond_to do |format|
-      format.turbo_stream do
-        if @room.errors.any?
-          render(
-            turbo_stream: turbo_stream.replace(
-              'room_form', partial: 'form', locals: {room: @room}
-            )
-          )
+      if @room.persisted?
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.append(:rooms, @room)
         end
+      else
+        format.html { render :new }
       end
     end
   end
@@ -35,7 +31,11 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
-        format.turbo_stream
+        format.turbo_stream do
+          @room.users.each do |user|
+            @room.broadcast_replace_to(user, :rooms)
+          end
+        end
       else
         format.html { render :edit }
       end
@@ -43,22 +43,29 @@ class RoomsController < ApplicationController
   end
 
   def destroy
+    users = @room.users.load
     @room.destroy
 
-    respond_to do |format|
-      format.html { redirect_to rooms_path, status: :see_other, notice: "Room was successfully destroyed." }
-      format.json { head :no_content }
+    users.each do |user|
+      @room.broadcast_remove_to(user, :rooms)
+
+      @room.broadcast_replace_to(
+        user, :rooms,
+        partial: 'rooms/welcome',
+        target: "detail_room_#{@room.id}"
+      )
     end
   end
 
   def add_user
-    user_room = UserRoom.create(room_id: params[:room_id], user_id: params[:user_id])
+    user_room = @room.user_rooms.create(user_id: params[:user_id])
+    @room.broadcast_append_to(user_room.user, :rooms)
 
     respond_to do |format|
       format.turbo_stream do
         render(
           turbo_stream: turbo_stream.replace(
-            "room_show_#{user_room.room_id}", partial: 'room', locals: {room: user_room.room}
+            "users_room_#{@room.id}", partial: 'users', locals: {room: @room}
           )
         )
       end

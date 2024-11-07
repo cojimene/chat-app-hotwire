@@ -1,0 +1,12 @@
+<% if message.user == current_user %>
+  <%= turbo_frame_tag message, :actions do %>
+    <div class="flex gap-1">
+      <%= link_to 'Edit', edit_message_path(message), data: {turbo_frame: dom_id(message)},
+        class: 'text-sm font-medium bg-sky-800 text-white py-1 px-3 rounded' %>
+
+      <%= button_to 'Delete', message_path(message),
+        class: 'text-sm font-medium bg-red-800 text-white py-1 px-3 rounded',
+        method: :delete, data: {turbo_confirm: 'Are you sure?'} %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,29 +1,15 @@
-<section class="flex flex-col gap-2 mt-10 items-center justify-center" id="room_show_<%= room.id %>">
-  <div class="flex flex-col">
-    <h3 class="font-bold text-3xl text-white"><%= room.name %> - Room</h3>
+<%= turbo_frame_tag room do %>
+  <div class="text-white border-white border rounded flex justify-between px-1 py-2">
+    <%= link_to room_path(room), class: 'font-semibold', data: {turbo_frame: 'room_details'} do %>
+      <%= room.name %>
+    <% end %>
+
+    <div class="flex items-center gap-2">
+      <%= link_to 'Edit', edit_room_path(room), class: 'text-sm' %>
+
+      <%= button_to 'Remove', room_path(room),
+        class: 'text-sm leading-normal', method: :delete,
+        data: {turbo_confirm: 'Are you sure?'} %>
+    </div>
   </div>
-
-  <section class="flex gap-5">
-    <div class="py-2 px-10 flex flex-col gap-1 items-center border-sky-600 border rounded-lg my-2 shadow-lg w-96">
-      <h3 class="text-white font-semibold text-center">Users in this room:</h3>
-
-      <% room.users.each do |user| %>
-        <div class="rounded underline text-white my-1 font-semibold text-sm">
-          <%= user.email %>
-        </div>
-      <% end %>
-    </div>
-
-    <div class="py-2 px-10 flex flex-col gap-1 items-center border-sky-600 border rounded-lg my-2 shadow-lg w-96">
-      <h3 class="text-white font-semibold text-center">Add users:</h3>
-
-      <% User.where.not(id: room.user_rooms.select(:user_id)).each do |user| %>
-          <%= button_to add_user_path, params: {user_id: user.id, room_id: room.id}, id: "add_user_#{user.id}", method: :post do %>
-            <div class="rounded underline text-white my-1 font-semibold text-sm">
-              <%= user.email %>
-            </div>
-        <% end %>
-      <% end %>
-    </div>
-  </section>
-</section>
+<% end %>

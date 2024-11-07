@@ -1,4 +1,4 @@
-<%= turbo_frame_tag "message_#{message.id}",
+<%= turbo_frame_tag message,
   class: 'bg-gray-200 px-3 py-2 flex justify-between rounded intems-center grap-2 shadow' do %>
 
   <div class="flex gap-1">
@@ -6,17 +6,9 @@
     <span class="font-semibold text-sm"><%= message.content %></span>
   </div>
 
-  <% if true %>
-    <div class="flex gap-1">
-      <%= link_to 'Edit', edit_message_path(message),
-        class: 'text-sm font-medium bg-sky-800 text-white py-1 px-3 rounded' %>
-
-      <%= button_to message_path(message),
-        class: 'text-sm font-medium bg-red-800 text-white py-1 px-3 rounded',
-        method: :delete do %>
-
-        Delete
-      <% end %>
-    </div>
+  <% if local_assigns[:from_stream] %>
+    <%= turbo_frame_tag message, :actions, src: actions_message_path(message) %>
+  <% else %>
+    <%= render 'messages/actions', message: message %>
   <% end %>
 <% end %>

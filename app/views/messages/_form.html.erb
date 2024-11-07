@@ -1,6 +1,9 @@
-<%= form_with model: [room, message], id: 'message_form', class: 'w-full flex flex-col' do |f| %>
+<%= form_with model: [room, message],
+  class: 'w-full flex flex-col',
+  data: {controller: 'form', action: 'submit->form#resetComponent'} do |f| %>
+
   <% if message.errors.any? %>
-    <div class="bg-red-50 text-red-500 px-3 py-2 font-small rounded-lg mb-1">
+    <div class="bg-red-50 text-red-500 px-3 py-2 font-small rounded-lg mb-1 errors">
       <ul>
         <% message.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,12 +14,15 @@
 
   <div class="flex w-full gap-2">
     <div class="w-full">
-      <%= f.text_field :content, class: 'w-full rounded shadow text-sm font-semibold border border-gray-100' %>
+      <%= f.text_field :content,
+        class: 'w-full rounded shadow text-sm font-semibold border border-gray-100' %>
     </div>
 
     <%= f.submit class: 'cursor-pointer bg-green-600 text-white font-semibold rounded p-2' %>
 
-    <%#= link_to_if message.persisted?, 'Cancel', :back,
-      class: 'cursor-pointer p-2 text-sm font-semibold bg-red-600 rounded text-white' %>
+    <% if message.persisted? %>
+      <%= link_to 'Cancel', message_path(message),
+        class: 'cursor-pointer bg-red-600 text-white font-semibold rounded p-2' %>
+    <% end %>
   </div>
 <% end %>

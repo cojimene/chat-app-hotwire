@@ -1,11 +1,40 @@
-<%= turbo_frame_tag 'rooms_controller' do %>
-  <main class="flex w-full h-screen bg-[#181D31]">
-    <%= render 'shared/side_bar' %>
+<%= turbo_stream_from current_user, :rooms %>
 
-    <section class="flex flex-col items-center justify-center gap-5 h-screen text-white w-full">
-      <%= image_tag 'chat-icon', width: 200 %>
-      <h1 class="font-bold text-4xl my-4">Chat App - Ruby on Rails 7</h1>
-      <p class="font-semibold">This is the chat app with RoR 7</p>
+<main class="flex w-full h-screen bg-[#181D31]">
+  <nav class="w-80 flex flex-col items-center justify-between border border-sky-500">
+    <section class="flex flex-col w-full">
+      <span class="text-white text-center font-semibold mt-5"><%= current_user.email %></span>
+
+      <div class="flex items-center justify-center mt-2">
+        <%=
+          button_to 'Log out', destroy_user_session_path,
+          method: :delete,
+          data: {turbo: false},
+          class: 'px-3 py-1 text-white bg-red-700 rounded font-semibold text-sm'
+        %>
+      </div>
+
+      <%= link_to rooms_path, data: {turbo: false} do %>
+        <h3 class="text-white font-bold text-xl mt-3 text-center mb-2">My rooms</h3>
+      <% end %>
+
+      <div class="flex flex-col px-2 gap-2 w-full" id="rooms">
+        <%= render @rooms %>
+      </div>
     </section>
-  </main>
-<% end %>
+
+    <%= turbo_frame_tag 'new_room', class: 'w-full px-2' do %>
+      <section class="flex flex-col items-center justify-center gap-2 mb-5">
+        <h3 class="font-semibold text-sm text-center text-white">Want to start a new conversation</h3>
+
+        <%= link_to new_room_path, class: 'px-3 py-1 bg-green-700 font-semibold text-sm' do %>
+          Create new room
+        <% end %>
+      </section>
+    <% end %>
+  </nav>
+
+  <%= turbo_frame_tag 'room_details', class: 'w-full' do %>
+    <%= render 'welcome' %>
+  <% end %>
+</main>

@@ -1,5 +1,5 @@
-<%= turbo_frame_tag 'room_form' do %>
+<%= turbo_frame_tag 'new_room', class: 'w-full px-2' do %>
   <h4 class="font-medium text-base text-white text-center">Create new room</h4>
 
-  <%= render "form", room: @room %>
+  <%= render 'form', room: @room %>
 <% end %>
