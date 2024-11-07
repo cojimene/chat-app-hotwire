@@ -18,5 +18,6 @@ module ChatAppHotwire
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    # config.hosts << '62cf-2803-1800-4016-fd70-932c-e63c-5b24-78cb.ngrok-free.app'
   end
 end

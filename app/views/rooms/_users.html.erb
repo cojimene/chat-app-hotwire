@@ -1,16 +1,20 @@
 <section class="flex gap-5" id="<%= dom_id(room, :users) %>">
   <div class="py-2 px-10 flex flex-col gap-1 items-center border-sky-600 border rounded-lg my-2 shadow-lg w-96">
-    <h3 class="text-white font-semibold text-center">Users in this room:</h3>
+    <h3 class="text-white font-semibold text-center">Users in this room (click to remove):</h3>
 
     <% room.users.each do |user| %>
-      <div class="rounded underline text-white my-1 font-semibold text-sm">
-        <%= user.email %>
-      </div>
+      <%= button_to remove_user_room_path(room), params: {user_id: user.id},
+        method: :delete, data: {turbo_confirm: 'Are you sure?'} do %>
+
+        <div class="rounded underline text-white my-1 font-semibold text-sm">
+          <%= user.email %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 
   <div class="py-2 px-10 flex flex-col gap-1 items-center border-sky-600 border rounded-lg my-2 shadow-lg w-96">
-    <h3 class="text-white font-semibold text-center">Add users:</h3>
+    <h3 class="text-white font-semibold text-center">Other users (click to add):</h3>
 
     <% User.where.not(id: room.user_rooms.select(:user_id)).each do |user| %>
       <%= button_to add_user_room_path(room), params: {user_id: user.id}, method: :post do %>

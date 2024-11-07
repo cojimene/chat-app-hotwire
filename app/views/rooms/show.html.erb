@@ -2,7 +2,7 @@
   <section class="flex flex-col gap-5 h-screen px-5" id="<%= dom_id(@room, :detail) %>">
     <section class="flex flex-col gap-2 mt-10 items-center justify-center">
       <div class="flex flex-col">
-        <h3 class="font-bold text-3xl text-white"><%= @room.name %> - Room</h3>
+        <%= render 'title', room: @room %>
       </div>
 
       <%= render 'users', room: @room %>

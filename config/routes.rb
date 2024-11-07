@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   resources :rooms do
-    post :add_user, on: :member
+    member do
+      post :add_user
+      delete :remove_user
+    end
 
     resources :messages, shallow: true do
       get :actions, on: :member
