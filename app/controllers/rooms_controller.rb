@@ -46,14 +46,14 @@ class RoomsController < ApplicationController
   end
 
   def destroy
-    users = @room.users.load
+    @room.users.each { |user| broadcast_remove_room_for(user) }
     @room.destroy
-    users.each { |user| broadcast_remove_room_for(user) }
   end
 
   def add_user
-    user_room = @room.user_rooms.create(user_id: params[:user_id])
-    @room.broadcast_append_to(user_room.user, :rooms)
+    user = User.find(params[:user_id])
+    @room.users << user
+    @room.broadcast_append_to(user, :rooms)
 
     @room.users.each do |user|
       @room.broadcast_replace_to(
@@ -66,9 +66,9 @@ class RoomsController < ApplicationController
   end
 
   def remove_user
-    user_room = @room.user_rooms.find_by(user_id: params[:user_id])
-    user_room.destroy
-    broadcast_remove_room_for(user_room.user)
+    user = User.find(params[:user_id])
+    @room.users.delete(user)
+    broadcast_remove_room_for(user)
 
     @room.users.each do |user|
       @room.broadcast_replace_to(
