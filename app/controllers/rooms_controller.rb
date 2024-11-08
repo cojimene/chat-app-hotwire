@@ -23,7 +23,7 @@ class RoomsController < ApplicationController
           render turbo_stream: turbo_stream.append(:rooms, @room)
         end
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
@@ -41,7 +41,7 @@ class RoomsController < ApplicationController
         )
       end
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

@@ -13,7 +13,7 @@ class MessagesController < ApplicationController
     if @message.save
       @message.broadcast_append_to(@room, :messages, locals: {from_stream: true})
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
     if @message.update(message_params)
       @message.broadcast_replace_to(@message.room, :messages, locals: {from_stream: true})
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
