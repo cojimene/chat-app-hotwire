@@ -8,7 +8,7 @@ Welcome, this is just a sample application as a result of taking the course "Rub
 
 * System dependencies: PostgreSQL
 
-* Configuration: Clone the repository in you machine, install PostgreSQL and start the deamon, install ruby 3.0.4 and run:
+* Configuration: Clone the repository in you machine, install PostgreSQL and start the deamon, install ruby and run:
     - `bundle install`
     - `rails db:create`
     - `rails db:migrate`
