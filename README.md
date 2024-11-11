@@ -2,9 +2,9 @@
 
 Welcome, this is just a sample application as a result of taking the course "Ruby on Rails and Hotwire - 2023" in Udemy. The code differs by far from the code showed in the course, because I removed the model callbacks and made another improvements and refactoring in the files and architecture. So, this is my own version.
 
-* Ruby version: 3.0.4
+* Ruby version: 3.2.2
   
-* Rails Version: 7.0.8.5
+* Rails Version: 7.0.8
 
 * System dependencies: PostgreSQL
 
